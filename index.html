@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Docs - Wixo</title>
+  <title>Docs — Project Name</title>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -19,6 +19,7 @@
     html { scroll-behavior: smooth; }
     body { font-family: var(--font-body); background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; }
 
+    /* ═══════════ TOPBAR ═══════════ */
     .topbar {
       position: fixed; top: 0; left: 0; right: 0; height: 52px;
       background: rgba(0,0,0,0.88); backdrop-filter: blur(20px);
@@ -41,7 +42,9 @@
     .search-trigger:hover { border-color: var(--border-light); }
     .search-trigger kbd { background: var(--bg-hover); border: 1px solid var(--border); border-radius: 3px; padding: 1px 6px; font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); margin-left: auto; }
 
-    .mode-switch { display: flex; align-items: center; gap: 0; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+    /* Toggle switch */
+    .mode-switch { display: none; align-items: center; gap: 0; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+    .mode-switch.unlocked { display: flex; }
     .mode-switch button {
       padding: 5px 14px; font-size: 11px; font-family: var(--font-body); font-weight: 500;
       background: none; border: none; color: var(--text-dim); cursor: pointer; transition: all 0.15s;
@@ -59,8 +62,10 @@
     .gh-link svg { width: 16px; height: 16px; }
     .menu-toggle { display: none; width: 34px; height: 34px; background: none; border: 1px solid var(--border); border-radius: 6px; color: #fff; cursor: pointer; align-items: center; justify-content: center; font-size: 18px; }
 
+    /* ═══════════ LAYOUT ═══════════ */
     .layout { display: flex; margin-top: 52px; min-height: calc(100vh - 52px); }
 
+    /* ═══════════ SIDEBAR ═══════════ */
     .sidebar {
       position: fixed; top: 52px; left: 0; bottom: 0; width: var(--sidebar-w);
       overflow-y: auto; padding: 20px 12px 40px; border-right: 1px solid var(--border);
@@ -93,16 +98,20 @@
     .btn-primary { flex: 1; padding: 6px; font-size: 11px; font-weight: 600; color: #000; background: #fff; border: none; border-radius: 5px; cursor: pointer; font-family: var(--font-body); }
     .btn-secondary { flex: 1; padding: 6px; font-size: 11px; color: var(--text-muted); background: none; border: 1px solid var(--border); border-radius: 5px; cursor: pointer; font-family: var(--font-body); }
 
+    /* ═══════════ MAIN ═══════════ */
     .main { margin-left: var(--sidebar-w); flex: 1; max-width: 780px; padding: 44px 52px 100px; }
 
+    /* ── View Mode ── */
     .view-title { font-size: 36px; font-weight: 700; letter-spacing: -1.5px; line-height: 1.15; margin-bottom: 12px; }
     .view-subtitle { font-size: 16px; color: var(--text-muted); line-height: 1.65; margin-bottom: 40px; max-width: 560px; }
 
+    /* Breadcrumb */
     .breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-dim); margin-bottom: 32px; font-family: var(--font-mono); }
     .breadcrumb a { color: var(--text-muted); text-decoration: none; cursor: pointer; }
     .breadcrumb a:hover { color: #fff; }
     .breadcrumb .sep { opacity: 0.3; }
 
+    /* Rendered content */
     .view-content h1 { font-size: 36px; font-weight: 700; letter-spacing: -1.5px; margin-bottom: 12px; }
     .view-content h2 { font-size: 22px; font-weight: 600; margin: 40px 0 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
     .view-content h2 .anchor { color: var(--text-dim); opacity: 0; margin-left: 8px; text-decoration: none; transition: opacity 0.2s; font-weight: 400; cursor: pointer; }
@@ -119,6 +128,7 @@
     .view-content code:not(pre code) { font-family: var(--font-mono); font-size: 12.5px; background: #0d0d12; border: 1px solid #1a1a24; border-radius: 5px; padding: 2px 7px; color: #e0a8e8; }
     .view-content blockquote { border-left: 2px solid var(--border-light); padding: 2px 0 2px 16px; margin: 16px 0; color: var(--text-dim); font-style: italic; }
 
+    /* Code block */
     .code-block { background: #0d0d12; border: 1px solid #1a1a24; border-radius: 10px; overflow: hidden; margin: 20px 0; }
     .code-header { display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-bottom: 1px solid #1a1a24; background: #0a0a10; }
     .code-tabs { display: flex; }
@@ -133,6 +143,7 @@
     .code-block .code-panel { display: none; }
     .code-block .code-panel.active { display: block; }
 
+    /* Callout */
     .callout { border-radius: 8px; padding: 14px 18px; margin: 20px 0; display: flex; gap: 12px; font-size: 13.5px; line-height: 1.6; border: 1px solid var(--border); background: var(--bg-raised); }
     .callout-icon { font-size: 14px; flex-shrink: 0; margin-top: 2px; color: var(--text-dim); }
     .callout p { margin: 0; }
@@ -140,6 +151,7 @@
     .callout-warn { border-left: 2px solid #555; }
     .callout-success { border-left: 2px solid #888; }
 
+    /* Prev/Next */
     .page-nav { display: flex; gap: 14px; margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--border); }
     .page-nav a { flex: 1; display: block; padding: 16px 18px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; transition: all 0.2s; cursor: pointer; }
     .page-nav a:hover { border-color: var(--border-light); transform: translateY(-1px); }
@@ -147,6 +159,7 @@
     .page-nav .nav-title { font-size: 14px; font-weight: 600; color: #fff; }
     .page-nav .next { text-align: right; }
 
+    /* ── TOC ── */
     .toc { position: fixed; top: 52px; right: 0; width: 200px; padding: 28px 16px; height: calc(100vh - 52px); overflow-y: auto; }
     .toc-title { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-dim); margin-bottom: 12px; }
     .toc a { display: block; font-size: 12px; color: var(--text-dim); text-decoration: none; padding: 3px 0 3px 12px; border-left: 1px solid var(--border); transition: all 0.15s; cursor: pointer; }
@@ -154,6 +167,7 @@
     .toc a.active-toc { color: #fff; border-color: #fff; }
     body.editing .toc { display: none; }
 
+    /* ═══════════ EDIT MODE ═══════════ */
     .edit-area { display: none; }
     body.editing .edit-area { display: block; }
     body.editing .view-area { display: none; }
@@ -176,6 +190,7 @@
 
     .empty-state { color: #555; font-size: 15px; padding-top: 60px; text-align: center; }
 
+    /* ═══════════ MODALS ═══════════ */
     .modal-overlay { position: fixed; inset: 0; z-index: 200; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); display: none; align-items: flex-start; justify-content: center; padding-top: 16vh; }
     .modal-overlay.show { display: flex; }
     .modal { width: 500px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
@@ -235,18 +250,20 @@
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 40; }
     .overlay.show { display: block; }
 
-    .kw { color: #c792ea; }       
-    .fn { color: #82aaff; }       
-    .st { color: #c3e88d; }       
-    .cm { color: #546e7a; font-style: italic; } 
-    .nr { color: #f78c6c; }       
-    .op { color: #89ddff; }       
-    .cl { color: #e0a8e8; }       
-    .bi { color: #ffcb6b; }       
-    .bl { color: #f78c6c; }       
-    .ty { color: #ffcb6b; }       
-    .se { color: #eee; }          
+    /* Syntax */
+    .kw { color: #c792ea; }       /* keywords: local, function, if, end... */
+    .fn { color: #82aaff; }       /* function calls & methods */
+    .st { color: #c3e88d; }       /* strings */
+    .cm { color: #546e7a; font-style: italic; } /* comments */
+    .nr { color: #f78c6c; }       /* numbers */
+    .op { color: #89ddff; }       /* operators & punctuation */
+    .cl { color: #e0a8e8; }       /* property keys */
+    .bi { color: #ffcb6b; }       /* built-in globals & types (Color3, Vector3...) */
+    .bl { color: #f78c6c; }       /* booleans & nil */
+    .ty { color: #ffcb6b; }       /* type annotations */
+    .se { color: #eee; }          /* self / plain identifiers */
 
+    /* Animations */
     @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .main > .view-area > *, .main > .edit-area > * { animation: fadeUp 0.35s ease both; }
 
@@ -269,7 +286,7 @@
   <header class="topbar">
     <div class="topbar-left">
       <button class="menu-toggle" onclick="toggleMobile()">☰</button>
-      <div class="topbar-logo"><div class="dot"></div>Wixo <span>docs</span></div>
+      <div class="topbar-logo"><div class="dot"></div>ProjectName <span>docs</span></div>
     </div>
     <div class="topbar-right">
       <button class="search-trigger" onclick="openSearch()">
@@ -305,6 +322,7 @@
 
   <div class="context-menu" id="context-menu"></div>
 
+  <!-- Search Modal -->
   <div class="modal-overlay" id="search-overlay" onclick="if(event.target===this)closeSearch()">
     <div class="modal" style="width:480px">
       <div class="search-header">
@@ -316,6 +334,7 @@
     </div>
   </div>
 
+  <!-- Image Modal -->
   <div class="modal-overlay" id="image-modal" onclick="if(event.target===this)closeModal('image-modal')">
     <div class="modal">
       <div class="modal-header"><h3>Insert Image</h3><button class="modal-close" onclick="closeModal('image-modal')">×</button></div>
@@ -335,6 +354,7 @@
     </div>
   </div>
 
+  <!-- Code Block Modal -->
   <div class="modal-overlay" id="code-modal" onclick="if(event.target===this)closeModal('code-modal')">
     <div class="modal" style="width:560px">
       <div class="modal-header"><h3>Insert Code Block</h3><button class="modal-close" onclick="closeModal('code-modal')">×</button></div>
@@ -351,6 +371,7 @@
     </div>
   </div>
 
+  <!-- Page Link Modal -->
   <div class="modal-overlay" id="link-modal" onclick="if(event.target===this)closeModal('link-modal')">
     <div class="modal" style="width:440px">
       <div class="modal-header"><h3>Insert Page Link</h3><button class="modal-close" onclick="closeModal('link-modal')">×</button></div>
@@ -362,6 +383,22 @@
         <div class="modal-footer">
           <button class="btn-primary" onclick="insertPageLink()">Insert</button>
           <button class="btn-secondary" onclick="closeModal('link-modal')">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Modal -->
+  <div class="modal-overlay" id="pw-modal" onclick="if(event.target===this)closeModal('pw-modal')">
+    <div class="modal" style="width:360px">
+      <div class="modal-header"><h3>Unlock Editor</h3><button class="modal-close" onclick="closeModal('pw-modal')">×</button></div>
+      <div class="modal-body">
+        <label>Password</label>
+        <input id="pw-input" type="password" placeholder="Enter password…" onkeydown="if(event.key==='Enter')tryUnlock()" style="font-family:var(--font-mono)" />
+        <div id="pw-error" style="color:#f05c5c;font-size:12px;margin-top:-8px;margin-bottom:10px;display:none">Wrong password</div>
+        <div class="modal-footer">
+          <button class="btn-primary" onclick="tryUnlock()">Unlock</button>
+          <button class="btn-secondary" onclick="closeModal('pw-modal')">Cancel</button>
         </div>
       </div>
     </div>
@@ -379,7 +416,7 @@
     };
 
     let data = null;
-    let appMode = "view"; 
+    let appMode = "view"; // "view" or "edit"
     let editingTitle = false;
     let saveTimeout = null;
     let codeTabs = [];
@@ -387,19 +424,21 @@
 
     // ── Storage ──
     async function loadData() {
-      try { const r = await window.storage.get(STORAGE_KEY); data = r?.value ? JSON.parse(r.value) : JSON.parse(JSON.stringify(DEFAULT_DATA)); }
+      try { var raw = localStorage.getItem(STORAGE_KEY); data = raw ? JSON.parse(raw) : JSON.parse(JSON.stringify(DEFAULT_DATA)); }
       catch { data = JSON.parse(JSON.stringify(DEFAULT_DATA)); }
       render();
     }
     async function saveData() {
       clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(async () => {
-        try { await window.storage.set(STORAGE_KEY, JSON.stringify(data)); const el = document.getElementById("save-indicator"); el.classList.add("show"); setTimeout(() => el.classList.remove("show"), 1500); }
+      saveTimeout = setTimeout(function() {
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); var el = document.getElementById("save-indicator"); el.classList.add("show"); setTimeout(function() { el.classList.remove("show"); }, 1500); }
         catch (e) { console.error("Save:", e); }
       }, 500);
     }
 
+    // ── Mode Toggle ──
     function setMode(m) {
+      if (m === "edit" && !editorUnlocked) return;
       appMode = m;
       editingTitle = false;
       document.body.classList.toggle("editing", m === "edit");
@@ -408,6 +447,7 @@
       render();
     }
 
+    // ── Actions ──
     function getPage() { return data.pages.find(x => x.id === data.activePage); }
     function setActive(id) { data.activePage = id; editingTitle = false; saveData(); render(); }
     function updateContent(c) { const p = getPage(); if (p) { p.content = c; saveData(); } }
@@ -440,6 +480,7 @@
       updateContent(ta.value); ta.focus(); ta.selectionStart = ta.selectionEnd = s + text.length;
     }
 
+    // ── Image ──
     function openImageModal() { imageBase64 = null; document.getElementById("image-url-input").value = ""; document.getElementById("image-alt-input").value = ""; document.getElementById("image-drop").innerHTML = "Drop an image here or click to browse"; document.getElementById("image-modal").classList.add("show"); }
     function handleImageFile(input) {
       const file = input.files[0]; if (!file) return;
@@ -455,6 +496,7 @@
       closeModal("image-modal");
     }
 
+    // Drag & drop
     setTimeout(() => {
       const drop = document.getElementById("image-drop"); if (!drop) return;
       drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("dragover"); });
@@ -466,6 +508,7 @@
       });
     }, 100);
 
+    // ── Code Block ──
     function openCodeModal() { codeTabs = [{ name: "Default", code: "" }]; renderCodeTabInputs(); document.getElementById("code-modal").classList.add("show"); }
     function addCodeTab() { codeTabs.push({ name: "Tab " + (codeTabs.length + 1), code: "" }); renderCodeTabInputs(); }
     function removeCodeTab(i) { if (codeTabs.length <= 1) return; codeTabs.splice(i, 1); renderCodeTabInputs(); }
@@ -484,6 +527,7 @@
 
     function closeModal(id) { document.getElementById(id).classList.remove("show"); }
 
+    // ── Page Link ──
     let selectedLinkPageId = null;
     function openLinkModal() {
       selectedLinkPageId = null;
@@ -519,6 +563,7 @@
       closeModal("link-modal");
     }
 
+    // ── Markdown ──
     function renderMarkdown(text) {
       if (!text) return '<p style="color:#555">No content yet.</p>';
       text = text.replace(/:::code-block\n([\s\S]*?):::end(?:code)?(?!tab)/g, (_, inner) => {
@@ -556,36 +601,45 @@
     }
 
     function highlight(raw) {
+      // Single-pass tokenizer — no placeholders, no double-escaping
+      // Input: RAW code (NOT html-escaped)
+      // Output: safe HTML with colored spans
       var r = '', i = 0, n = raw.length;
 
       function ec(c) { return c === '<' ? '&lt;' : c === '>' ? '&gt;' : c === '&' ? '&amp;' : c === '"' ? '&quot;' : c; }
       function es(s) { return s.replace(/[<>&"]/g, ec); }
 
       while (i < n) {
+        // -- comments (Lua)
         if (raw[i] === '-' && raw[i+1] === '-') {
           var e = raw.indexOf('\n', i); if (e === -1) e = n;
           r += '<span class="cm">' + es(raw.substring(i, e)) + '</span>'; i = e; continue;
         }
+        // // comments (JS)
         if (raw[i] === '/' && raw[i+1] === '/') {
           var e = raw.indexOf('\n', i); if (e === -1) e = n;
           r += '<span class="cm">' + es(raw.substring(i, e)) + '</span>'; i = e; continue;
         }
+        // # comments (at line start)
         if (raw[i] === '#' && (i === 0 || raw[i-1] === '\n')) {
           var e = raw.indexOf('\n', i); if (e === -1) e = n;
           r += '<span class="cm">' + es(raw.substring(i, e)) + '</span>'; i = e; continue;
         }
+        // Strings
         if (raw[i] === '"' || raw[i] === "'") {
           var q = raw[i], j = i + 1;
           while (j < n && raw[j] !== q) { if (raw[j] === '\\') j++; j++; }
           if (j < n) j++;
           r += '<span class="st">' + es(raw.substring(i, j)) + '</span>'; i = j; continue;
         }
+        // Numbers
         if (/\d/.test(raw[i]) && (i === 0 || !/[a-zA-Z_]/.test(raw[i-1]))) {
           var j = i;
           if (raw[j] === '0' && (raw[j+1] === 'x' || raw[j+1] === 'X')) { j += 2; while (j < n && /[0-9a-fA-F]/.test(raw[j])) j++; }
           else { while (j < n && /[\d.]/.test(raw[j])) j++; }
           r += '<span class="nr">' + es(raw.substring(i, j)) + '</span>'; i = j; continue;
         }
+        // Words (identifiers / keywords)
         if (/[a-zA-Z_]/.test(raw[i])) {
           var j = i; while (j < n && /\w/.test(raw[j])) j++;
           var w = raw.substring(i, j);
@@ -607,15 +661,18 @@
             r += w;
           i = j; continue;
         }
+        // Dot / colon (operators that precede method/property names)
         if (raw[i] === '.' && raw[i+1] === '.') {
           r += '<span class="op">..</span>'; i += 2; continue;
         }
         if (/[.:=+\-*\/%^~<>!{}\[\](),;]/.test(raw[i])) {
+          // Multi-char operators
           if (i+1 < n && /^(==|~=|>=|<=|=>|!=)$/.test(raw[i]+raw[i+1])) {
             r += '<span class="op">' + es(raw[i]+raw[i+1]) + '</span>'; i += 2; continue;
           }
           r += '<span class="op">' + ec(raw[i]) + '</span>'; i++; continue;
         }
+        // Whitespace and everything else
         r += ec(raw[i]); i++;
       }
       return r;
@@ -635,6 +692,7 @@
       });
     }
 
+    // ── TOC ──
     function buildToc(content) {
       const headings = [];
       content.replace(/^## (.+)$/gm, (_, t) => { headings.push(t); });
@@ -647,6 +705,7 @@
       document.getElementById("toc").innerHTML = h;
     }
 
+    // ── Render ──
     function render() { renderSidebar(); renderMain(); }
 
     function renderSidebar() {
@@ -676,6 +735,7 @@
         return;
       }
 
+      // ── View ──
       const pageIdx = data.pages.indexOf(page);
       const prevPage = pageIdx > 0 ? data.pages[pageIdx - 1] : null;
       const nextPage = pageIdx < data.pages.length - 1 ? data.pages[pageIdx + 1] : null;
@@ -683,6 +743,7 @@
       let vh = '<div class="breadcrumb"><a onclick="false">Docs</a><span class="sep">/</span><a onclick="false">' + esc(page.group) + '</a><span class="sep">/</span>' + esc(page.title) + '</div>';
       vh += '<div class="view-content">' + renderMarkdown(page.content) + '</div>';
 
+      // Prev/Next
       if (prevPage || nextPage) {
         vh += '<nav class="page-nav">';
         if (prevPage) vh += '<a onclick="setActive(\'' + prevPage.id + '\')"><div class="nav-label">← Previous</div><div class="nav-title">' + esc(prevPage.title) + '</div></a>';
@@ -693,6 +754,7 @@
       document.getElementById("view-area").innerHTML = vh;
       buildToc(page.content);
 
+      // ── Edit ──
       let eh = "";
       if (editingTitle) {
         eh += '<input class="title-input" id="title-input" value="' + esc(page.title) + '" oninput="updateTitle(this.value)" onblur="editingTitle=false;render()" onkeydown="if(event.key===\'Enter\'){editingTitle=false;render()}" />';
@@ -716,6 +778,7 @@
       if (editingTitle) { const i = document.getElementById("title-input"); if (i) i.focus(); }
     }
 
+    // ── Sidebar Forms ──
     function showNewPageForm() {
       const a = document.getElementById("new-page-area"); if (!a) return;
       a.innerHTML = '<div class="sidebar-form"><input id="new-page-title" placeholder="Page title" onkeydown="if(event.key===\'Enter\')submitNewPage()" /><select id="new-page-group">' + data.groups.map(g => '<option value="' + esc(g) + '">' + esc(g) + '</option>').join("") + '</select><div class="btn-row"><button class="btn-primary" onclick="submitNewPage()">Add</button><button class="btn-secondary" onclick="render()">Cancel</button></div></div>';
@@ -729,6 +792,7 @@
     }
     function submitNewGroup() { const n = document.getElementById("new-group-name")?.value.trim(); if (n) addGroup(n); }
 
+    // ── Context Menu ──
     function showContext(e, pid) {
       e.preventDefault();
       const m = document.getElementById("context-menu");
@@ -739,6 +803,7 @@
     function hideContext() { document.getElementById("context-menu").classList.remove("show"); }
     document.addEventListener("click", hideContext);
 
+    // ── Search ──
     function openSearch() { document.getElementById("search-overlay").classList.add("show"); document.getElementById("search-input").value = ""; document.getElementById("search-input").focus(); renderSearch(); }
     function closeSearch() { document.getElementById("search-overlay").classList.remove("show"); }
     function renderSearch() {
@@ -750,6 +815,7 @@
       c.innerHTML = r.map(p => '<button class="search-result" onclick="setActive(\'' + p.id + '\');closeSearch()"><strong>' + esc(p.title) + '</strong><span class="group-label">in ' + esc(p.group) + '</span></button>').join("");
     }
 
+    // ── TOC scroll tracking ──
     window.addEventListener("scroll", () => {
       const headings = document.querySelectorAll(".view-content h2[id]");
       const links = document.querySelectorAll(".toc a");
@@ -760,7 +826,36 @@
 
     function toggleMobile() { document.getElementById("sidebar").classList.toggle("open"); document.getElementById("overlay").classList.toggle("show"); }
 
+    var EDIT_HASH = "939cfad63bc1959baabd4dd8cae647a4f2a24dec2f8314a38ad4a95098c432de"; // SHA-256 of password
+    var editorUnlocked = false;
+
+    async function hashPassword(pw) {
+      var enc = new TextEncoder().encode(pw);
+      var buf = await crypto.subtle.digest("SHA-256", enc);
+      return Array.from(new Uint8Array(buf)).map(function(b) { return b.toString(16).padStart(2, "0"); }).join("");
+    }
+
+    async function tryUnlockEditor() {
+      var pw = prompt("Enter editor password:");
+      if (!pw) return;
+      var h = await hashPassword(pw);
+      if (h === EDIT_HASH) {
+        editorUnlocked = true;
+        sessionStorage.setItem("docs-unlocked", "1");
+        document.getElementById("mode-switch").classList.add("unlocked");
+      } else {
+        alert("Incorrect password.");
+      }
+    }
+
+    // Restore session unlock
+    if (sessionStorage.getItem("docs-unlocked") === "1") {
+      editorUnlocked = true;
+      document.getElementById("mode-switch").classList.add("unlocked");
+    }
+
     document.addEventListener("keydown", e => {
+      if (e.ctrlKey && e.shiftKey && e.key === "E") { e.preventDefault(); tryUnlockEditor(); }
       if ((e.metaKey || e.ctrlKey) && e.key === "k") { e.preventDefault(); openSearch(); }
       if (e.key === "Escape") { closeSearch(); hideContext(); closeModal("image-modal"); closeModal("code-modal"); closeModal("link-modal"); }
     });
