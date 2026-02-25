@@ -266,6 +266,8 @@
     /* Animations */
     @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     .main > .view-area > *, .main > .edit-area > * { animation: fadeUp 0.35s ease both; }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 15%, 45%, 75% { transform: translateX(-6px); } 30%, 60%, 90% { transform: translateX(6px); } }
+    .shake { animation: shake 0.4s ease; }
 
     @media (max-width: 1200px) { .toc { display: none; } }
     @media (max-width: 860px) {
@@ -390,16 +392,32 @@
 
   <!-- Password Modal -->
   <div class="modal-overlay" id="pw-modal" onclick="if(event.target===this)closeModal('pw-modal')">
-    <div class="modal" style="width:360px">
-      <div class="modal-header"><h3>Unlock Editor</h3><button class="modal-close" onclick="closeModal('pw-modal')">×</button></div>
-      <div class="modal-body">
-        <label>Password</label>
-        <input id="pw-input" type="password" placeholder="Enter password…" onkeydown="if(event.key==='Enter')tryUnlock()" style="font-family:var(--font-mono)" />
-        <div id="pw-error" style="color:#f05c5c;font-size:12px;margin-top:-8px;margin-bottom:10px;display:none">Wrong password</div>
-        <div class="modal-footer">
-          <button class="btn-primary" onclick="tryUnlock()">Unlock</button>
-          <button class="btn-secondary" onclick="closeModal('pw-modal')">Cancel</button>
+    <div class="modal" style="width:380px" id="pw-modal-inner">
+      <div style="padding:32px 28px 28px;text-align:center">
+        <div style="width:48px;height:48px;border-radius:50%;background:#111;border:1px solid #1e1e1e;display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </div>
+        <h3 style="font-size:16px;font-weight:600;margin-bottom:4px">Unlock Editor</h3>
+        <p style="font-size:12px;color:#555;margin-bottom:24px">Enter your password to access edit mode</p>
+        <div style="position:relative;margin-bottom:8px">
+          <input id="pw-input" type="password" placeholder="Password" autocomplete="off" spellcheck="false"
+            onkeydown="if(event.key==='Enter')tryUnlock()"
+            style="width:100%;background:#0a0a0a;border:1px solid #1e1e1e;border-radius:8px;padding:12px 44px 12px 14px;font-size:14px;color:#eee;font-family:var(--font-mono);outline:none;transition:border-color 0.2s" 
+            onfocus="this.style.borderColor='#2e2e2e'" onblur="this.style.borderColor='#1e1e1e'" />
+          <button onclick="togglePwVis()" id="pw-eye" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:#444;cursor:pointer;padding:4px;display:flex;align-items:center" title="Show password">
+            <svg id="pw-eye-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            <svg id="pw-eye-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div id="pw-error" style="color:#f05c5c;font-size:12px;margin-bottom:10px;display:none;text-align:left">
+          <span style="display:flex;align-items:center;gap:4px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            Incorrect password
+          </span>
+        </div>
+        <button onclick="tryUnlock()" style="width:100%;padding:11px;font-size:13px;font-weight:600;color:#000;background:#fff;border:none;border-radius:8px;cursor:pointer;font-family:var(--font-body);transition:opacity 0.15s;margin-bottom:8px" onmouseenter="this.style.opacity='0.85'" onmouseleave="this.style.opacity='1'">Unlock</button>
+        <button onclick="closeModal('pw-modal')" style="width:100%;padding:9px;font-size:12px;color:#555;background:none;border:none;cursor:pointer;font-family:var(--font-body)">Cancel</button>
+        <p style="font-size:10px;color:#333;margin-top:16px">Press Ctrl+Shift+E anytime to open this</p>
       </div>
     </div>
   </div>
@@ -836,16 +854,38 @@
     }
 
     async function tryUnlockEditor() {
-      var pw = prompt("Enter editor password:");
+      document.getElementById("pw-input").value = "";
+      document.getElementById("pw-error").style.display = "none";
+      document.getElementById("pw-modal").classList.add("show");
+      setTimeout(function() { document.getElementById("pw-input").focus(); }, 100);
+    }
+
+    async function tryUnlock() {
+      var pw = document.getElementById("pw-input").value;
       if (!pw) return;
       var h = await hashPassword(pw);
       if (h === EDIT_HASH) {
         editorUnlocked = true;
         sessionStorage.setItem("docs-unlocked", "1");
         document.getElementById("mode-switch").classList.add("unlocked");
+        closeModal("pw-modal");
       } else {
-        alert("Incorrect password.");
+        document.getElementById("pw-error").style.display = "block";
+        document.getElementById("pw-input").value = "";
+        document.getElementById("pw-input").focus();
+        var inner = document.getElementById("pw-modal-inner");
+        inner.classList.remove("shake");
+        void inner.offsetWidth;
+        inner.classList.add("shake");
       }
+    }
+
+    function togglePwVis() {
+      var inp = document.getElementById("pw-input");
+      var on = document.getElementById("pw-eye-on");
+      var off = document.getElementById("pw-eye-off");
+      if (inp.type === "password") { inp.type = "text"; on.style.display = "block"; off.style.display = "none"; }
+      else { inp.type = "password"; on.style.display = "none"; off.style.display = "block"; }
     }
 
     // Restore session unlock
@@ -857,7 +897,7 @@
     document.addEventListener("keydown", e => {
       if (e.ctrlKey && e.shiftKey && e.key === "E") { e.preventDefault(); tryUnlockEditor(); }
       if ((e.metaKey || e.ctrlKey) && e.key === "k") { e.preventDefault(); openSearch(); }
-      if (e.key === "Escape") { closeSearch(); hideContext(); closeModal("image-modal"); closeModal("code-modal"); closeModal("link-modal"); }
+      if (e.key === "Escape") { closeSearch(); hideContext(); closeModal("image-modal"); closeModal("code-modal"); closeModal("link-modal"); closeModal("pw-modal"); }
     });
 
     function esc(s) { const d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
